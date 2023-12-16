@@ -1,48 +1,66 @@
-<<<<<<< HEAD
 let RelationShip = Object.freeze({
     parent : 0 ,
     child : 1,
     sibling : 2
 })
-=======
-let Relationship = Object.freeze({
-    parent : 0,
-    child : 1,
-    siblings : 2
-});
 
 class Person{
     constructor(name){
-        this.name = name;
+        this.name = name; 
     }
 }
 
-// LOW level module
+// LOW LEVEL MODULE
+class RelationShipBrowser{
 
-class Relationships{
     constructor(){
+        if(this.constructor.name === 'RelationshipBrowser'){
+            throw new Error('RelationshipBrowser is abstract!');
+        }
+    }
+}
+class RelationShips extends RelationShipBrowser{
+    constructor(){
+        super();
         this.data = [];
     }
 
-    addParentChild(parent,child){
+    addParentAndChild(parent , child){
         this.data.push({
             from : parent,
-            type: Relationship.parent,
-            to:child
-        });
+            type : RelationShip.parent,
+            to : child
+        })
+    }
+
+    findAllChildrenOf(name){
+        return this.data.filter(r=>
+            r.from.name === name &&
+            r.type === RelationShip.parent).map(r=> r.to);
     }
 }
 
-// High level module
-class Research{
-    constructor(relationships){
-        // find all children of JOHN
-        let relations = relationships.data;
-        for(let rel of relations.filter(r=> 
-            r.from.name === 'John' && 
-            r.type === Relationship.parent)){
-                console.log(`John has a child name ${rel.to.name}`)
-            }
+// High - level module
+
+class Research {
+
+    // abstract classes / interfaces
+    // constructor(relationships){
+    //     // find all children of John
+
+    //     let relations = relationships.data;
+    //     for(let rel of relations.filter(r=>
+    //         r.from.name === 'John' &&
+    //         r.type === RelationShip.parent)){
+    //             console.log(`John has a child named ${rel.to.name}`)
+    //         }
+
+    // }
+
+    constructor(browser){
+        for(let p of browser.findAllChildrenOf('John')){
+            console.log(`John has a child called ${p.name}`)
+        }
     }
 }
 
@@ -50,10 +68,12 @@ let parent = new Person('John');
 let child1 = new Person('Chris');
 let child2 = new Person('Matt');
 
-let rels = new Relationships();
-rels.addParentChild(parent,child1);
-rels.addParentChild(parent,child2);
 
-new Research(rels)
->>>>>>> 0dcd56190e368b6360aae7e1577d8c8cbf8401b9
+let rels = new RelationShips();
+rels.addParentAndChild(parent,child1);
+rels.addParentAndChild(parent,child2);
+
+
+
+new Research(rels);
 
